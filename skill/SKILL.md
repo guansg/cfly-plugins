@@ -1,27 +1,28 @@
 ---
 name: cflyedit-plugin
 description: >-
-  Guide AI agents (Cursor, Claude Code, Codex) when developing CflyEdit MCP
+  Guide AI agents (CflyEdit, Cursor, Claude Code, Codex) when developing CflyEdit MCP
   plugins (cfly-plugin.json, stdio server, probe tools, pack to .cfly-plugin.zip).
-  Plugins run in CflyEdit (cflyedit.com). Use when creating cfly-mysql or other
-  plugins, editing manifest, implementing mcp.probeTool, or packaging release zips.
+  CflyEdit (cflyedit.com) is both dev editor and plugin host. Use when creating
+  cfly-mysql or other plugins, editing manifest, implementing mcp.probeTool,
+  or packaging release zips.
 ---
 
 # CflyEdit Plugin Development (AI Agent Skill)
 
-This skill is for **plugin authors** using **Cursor**, **Claude Code**, or **Codex** while working in this repository.  
-Plugins you build here run in **[CflyEdit](https://cflyedit.com)** — the host app that installs MCP plugins for assistant chat.
+This skill is for **plugin authors** using **CflyEdit**, **Cursor**, **Claude Code**, or **Codex** while working in this repository.  
+**[CflyEdit](https://cflyedit.com)** is both the recommended **development editor** (open this repo, install this skill) and the **plugin host** (install `.cfly-plugin.zip`, run MCP tools in assistant chat).
 
 The full platform contract lives in [PLUGIN-AUTHOR-GUIDE.md](../PLUGIN-AUTHOR-GUIDE.md); this file only constrains Agent behavior.
 
 ## Tool context
 
-| Tool | You are likely running in | CflyEdit role |
-|------|---------------------------|---------------|
-| **Cursor** | IDE with Agent + skills | Target runtime for finished plugins |
-| **Claude Code** | CLI / project agent | Target runtime for finished plugins |
-| **Codex** | Coding agent (AGENTS.md) | Target runtime for finished plugins |
-| **CflyEdit** | N/A here — end-user app | Installs `.cfly-plugin.zip`, injects config, calls MCP tools |
+| Tool | Role |
+|------|------|
+| **CflyEdit** | Dev editor + plugin host — develop in this repo, install skill, pack zip, test in plugin hub |
+| **Cursor** | Alternative dev editor — project or global skills |
+| **Claude Code** | CLI / project agent — `CLAUDE.md` or `.claude/` |
+| **Codex** | Coding agent — `AGENTS.md` |
 
 ## Read first (in order)
 
@@ -38,7 +39,7 @@ The full platform contract lives in [PLUGIN-AUTHOR-GUIDE.md](../PLUGIN-AUTHOR-GU
 3. Implement `server/index.js` (and `server/lib/*` if needed)
 4. `cd <pluginId>/server && npm ci --omit=dev`
 5. From repo root: `zip -r <pluginId>-<version>.cfly-plugin.zip <pluginId>/`
-6. User installs zip in **CflyEdit** plugin hub (not in Cursor / Claude Code / Codex)
+6. Install and test the zip in **CflyEdit** plugin hub (same app if you develop there)
 
 ## Hard rules (acceptance fails if violated)
 

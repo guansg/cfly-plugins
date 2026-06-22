@@ -1,27 +1,28 @@
 ---
 name: cflyedit-plugin
 description: >-
-  Guide AI agents (Cursor, Claude Code, Codex) when developing CflyEdit MCP
+  Guide AI agents (CflyEdit, Cursor, Claude Code, Codex) when developing CflyEdit MCP
   plugins (cfly-plugin.json, stdio server, probe tools, pack to .cfly-plugin.zip).
-  Plugins run in CflyEdit (cflyedit.com). Use when creating cfly-mysql or other
-  plugins, editing manifest, implementing mcp.probeTool, or packaging release zips.
+  CflyEdit (cflyedit.com) is both dev editor and plugin host. Use when creating
+  cfly-mysql or other plugins, editing manifest, implementing mcp.probeTool,
+  or packaging release zips.
 ---
 
 # CflyEdit 插件开发（AI Agent Skill）
 
-本 skill 供**插件作者**在 **Cursor**、**Claude Code** 或 **Codex** 中开发本仓库插件时使用。  
-此处开发的插件最终在 **[CflyEdit](https://cflyedit.com)** 中安装运行 —— 宿主应用，在助手对话中加载 MCP 插件。
+本 skill 供**插件作者**在 **CflyEdit**、**Cursor**、**Claude Code** 或 **Codex** 中开发本仓库插件时使用。  
+**[CflyEdit](https://cflyedit.com)** 既是推荐的**开发编辑器**（打开本仓库、安装本 skill），也是**插件宿主**（安装 `.cfly-plugin.zip`、在助手对话中运行 MCP 工具）。
 
 完整契约以 [PLUGIN-AUTHOR-GUIDE.zh-CN.md](../PLUGIN-AUTHOR-GUIDE.zh-CN.md) 为准，本文件仅约束 Agent 行为要点。
 
 ## 工具语境
 
-| 工具 | 你当前可能在用 | CflyEdit 的角色 |
-|------|---------------|----------------|
-| **Cursor** | IDE + Agent + skills | 成品插件的运行宿主 |
-| **Claude Code** | CLI / 项目 Agent | 成品插件的运行宿主 |
-| **Codex** | 编程 Agent（AGENTS.md） | 成品插件的运行宿主 |
-| **CflyEdit** | 此处不涉及 —— 终端用户应用 | 安装 `.cfly-plugin.zip`、注入配置、调用 MCP 工具 |
+| 工具 | 角色 |
+|------|------|
+| **CflyEdit** | 开发编辑器 + 插件宿主 —— 在本仓库开发、安装 skill、打包 zip、在插件广场测试 |
+| **Cursor** | 可选开发编辑器 —— 项目级或全局 skills |
+| **Claude Code** | CLI / 项目 Agent —— `CLAUDE.md` 或 `.claude/` |
+| **Codex** | 编程 Agent —— `AGENTS.md` |
 
 ## 必读（按顺序）
 

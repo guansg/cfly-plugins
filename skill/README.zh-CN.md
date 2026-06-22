@@ -2,7 +2,7 @@
 
 供 **插件作者** 安装到 AI 编程工具，在本仓库内开发 MCP 插件时约束 Agent 行为。
 
-支持的工具：**[CflyEdit](https://cflyedit.com)**（插件宿主）、**Cursor**、**Claude Code**、**Codex**。
+支持的工具：**[CflyEdit](https://cflyedit.com)**（编辑器 + 插件宿主）、**Cursor**、**Claude Code**、**Codex**。
 
 本目录 **不是** 任何工具的自动加载路径；需要按下面步骤**复制到你本机**后才会生效。
 
@@ -10,7 +10,7 @@
 
 | 名称 | 在本工作流中的角色 |
 |------|-------------------|
-| **CflyEdit** | 宿主应用 [cflyedit.com](https://cflyedit.com) —— 在助手对话中安装、配置、运行 MCP 插件。**不是**安装本 skill 的地方。 |
+| **CflyEdit** | AI 编辑器 + 插件宿主 [cflyedit.com](https://cflyedit.com) —— 在本仓库**开发**插件（可安装本 skill），并在插件广场**安装/测试** `.cfly-plugin.zip` |
 | **Cursor** | AI IDE —— 从 `~/.cursor/skills/` 或 `.cursor/skills/` 加载 skill |
 | **Claude Code** | Anthropic CLI / IDE Agent —— 从 `CLAUDE.md` 或 `.claude/` 项目说明加载规则 |
 | **Codex** | OpenAI 编程 Agent —— 从 `AGENTS.md` 或项目 Agent 说明加载规则 |
@@ -26,9 +26,21 @@
 
 ## 安装
 
-任选**一种**工具。源文件用 `SKILL.md`（英文）或 `SKILL.zh-CN.md`（中文）。
+可选**一种或多种**工具。源文件用 `SKILL.md`（英文）或 `SKILL.zh-CN.md`（中文）。
 
-### Cursor（推荐）
+### CflyEdit（编辑器 + 插件宿主）
+
+在 **[CflyEdit](https://cflyedit.com)** 中打开本仓库作为开发编辑器，并在项目级安装 skill：
+
+```bash
+# 在本仓库根目录
+mkdir -p .cursor/skills/cflyedit-plugin
+cp skill/SKILL.zh-CN.md .cursor/skills/cflyedit-plugin/SKILL.md
+```
+
+CflyEdit 也是**测试与发布**插件的地方：在设置 → 插件广场安装打包好的 `.cfly-plugin.zip`，配置后在助手对话中调用 MCP 工具。条件允许时，可在同一应用内完成开发与验收。
+
+### Cursor
 
 **全局**
 
@@ -84,11 +96,6 @@ cat skill/SKILL.zh-CN.md >> AGENTS.md
 # 添加："开发 CflyEdit 插件时遵循 skill/SKILL.zh-CN.md。"
 ```
 
-### CflyEdit（运行时，非 skill 安装）
-
-终端用户在 **CflyEdit** 内（设置 → 插件广场）安装打包好的 `.cfly-plugin.zip`。  
-本 `skill/` 目录供作者用 Cursor / Claude Code / Codex **编写**插件源码，**不是**给 CflyEdit 客户端加载的。
-
 ## 何时会用到
 
 安装后，在 AI 工具中编辑插件源码、编写 `cfly-plugin.json`、实现探针 tool、打包 Release zip 等任务时，Agent 会优先遵循 skill 中的硬规则。
@@ -101,7 +108,7 @@ cat skill/SKILL.zh-CN.md >> AGENTS.md
 | `SKILL.md` / `SKILL.zh-CN.md` | Agent 短规则与工作流 |
 | [../cfly-mcp-demo/](../cfly-mcp-demo/) | 可运行参考实现 |
 
-请先阅读 **插件开发指南**，再在 Cursor / Claude Code / Codex 中安装本 skill。
+请先阅读 **插件开发指南**，再在 CflyEdit / Cursor / Claude Code / Codex 中安装本 skill。
 
 ## 更新 skill
 

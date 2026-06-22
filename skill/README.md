@@ -2,7 +2,7 @@
 
 For **plugin authors** to install in their AI coding tool to guide the Agent when developing MCP plugins in this repository.
 
-Supported tools: **[CflyEdit](https://cflyedit.com)** (plugin host), **Cursor**, **Claude Code**, **Codex**.
+Supported tools: **[CflyEdit](https://cflyedit.com)** (editor + plugin host), **Cursor**, **Claude Code**, **Codex**.
 
 This folder is **not** auto-loaded. **Copy the skill to your tool** using the steps below.
 
@@ -10,7 +10,7 @@ This folder is **not** auto-loaded. **Copy the skill to your tool** using the st
 
 | Name | Role in this workflow |
 |------|------------------------|
-| **CflyEdit** | Host app at [cflyedit.com](https://cflyedit.com) — installs, configures, and runs MCP plugins in assistant chat. **Not** where you install this skill. |
+| **CflyEdit** | AI editor + plugin host at [cflyedit.com](https://cflyedit.com) — **develop** plugins in this repo (install this skill) **and** install/test `.cfly-plugin.zip` in the plugin hub |
 | **Cursor** | AI IDE — load skill from `~/.cursor/skills/` or `.cursor/skills/` |
 | **Claude Code** | Anthropic CLI / IDE agent — load rules from `CLAUDE.md` or `.claude/` project instructions |
 | **Codex** | OpenAI coding agent — load rules from `AGENTS.md` or project agent instructions |
@@ -25,9 +25,21 @@ This folder is **not** auto-loaded. **Copy the skill to your tool** using the st
 
 ## Install
 
-Pick **one** tool below. Use `SKILL.md` (English) or `SKILL.zh-CN.md` (中文) as the source file.
+Pick **one or more** tools below. Use `SKILL.md` (English) or `SKILL.zh-CN.md` (中文) as the source file.
 
-### Cursor (recommended)
+### CflyEdit (editor + plugin host)
+
+Open this repository in **[CflyEdit](https://cflyedit.com)** as your development editor, then install the skill at project level:
+
+```bash
+# From this repo root
+mkdir -p .cursor/skills/cflyedit-plugin
+cp skill/SKILL.md .cursor/skills/cflyedit-plugin/
+```
+
+CflyEdit is also where you **test and ship** plugins: install the packaged `.cfly-plugin.zip` via Settings → Plugin hub, configure, and call MCP tools in assistant chat. Develop and validate in the same app when possible.
+
+### Cursor
 
 **Global**
 
@@ -83,11 +95,6 @@ cat skill/SKILL.md >> AGENTS.md
 # Add: "When working on CflyEdit plugins, follow skill/SKILL.md."
 ```
 
-### CflyEdit (runtime, not skill install)
-
-End users install packaged `.cfly-plugin.zip` files **inside CflyEdit** (Settings → Plugin hub).  
-This `skill/` folder is for **authors** using Cursor / Claude Code / Codex to **write** plugin source — not for CflyEdit itself.
-
 ## When it applies
 
 After install, when you edit plugin source, write `cfly-plugin.json`, implement probe tools, or package release zips, the Agent should follow the rules in the skill file.
@@ -100,10 +107,10 @@ After install, when you edit plugin source, write `cfly-plugin.json`, implement 
 | `SKILL.md` / `SKILL.zh-CN.md` | Short Agent rules and workflow |
 | [../cfly-mcp-demo/](../cfly-mcp-demo/) | Runnable reference plugin |
 
-Read **PLUGIN-AUTHOR-GUIDE.md** first, then install this skill in your AI tool.
+Read **PLUGIN-AUTHOR-GUIDE.md** first, then install this skill in CflyEdit / Cursor / Claude Code / Codex.
 
 ## Updating
 
-When the repo updates `skill/`, re-copy the chosen file into Cursor / Claude Code / Codex instructions.
+When the repo updates `skill/`, re-copy the chosen file into CflyEdit / Cursor / Claude Code / Codex instructions.
 
 [中文说明](./README.zh-CN.md)
