@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "id": "cfly-mcp-demo",
+  "name": "MCP Demo",
+  "version": "1.1.0",
+  "description": {
+    "zh-CN": "官方参考插件：验证安装、API Key 配置与工具调用，无需外网。",
+    "en-US": "Official reference plugin for install, API key config, and tool calls. No external network required.",
+    "ja-JP": "公式リファレンスプラグイン：インストール確認、API Key 設定、ツール呼び出しの検証用。外部ネットワーク不要。",
+    "es-ES": "Plugin de referencia oficial: verifica la instalación, configuración de API Key y llamadas a herramientas. No requiere red externa."
+  },
+  "icon": "assets/icon.svg",
+
+  "transport": "stdio",
+  "runtime": {
+    "entry": "server/index.js",
+    "args": [],
+    "requires": { "node": ">=22" },
+    "bundleDependencies": true
+  },
+
+  "mcp": {
+    "connectTimeoutMs": 30000,
+    "listToolsTimeoutMs": 15000,
+    "probeTool": "verify_api_key"
+  },
+
+  "permissions": ["localProcess"],
+
+  "config": {
+    "required": ["apiKey"],
+    "fields": [
+      {
+        "key": "apiKey",
+        "type": "secret",
+        "label": {
+          "zh-CN": "API Key",
+          "en-US": "API Key",
+          "ja-JP": "API Key",
+          "es-ES": "API Key"
+        },
+        "description": {
+          "zh-CN": "测试用密钥，任意 8 位及以上字符串即可，例如 cfly-demo-2026",
+          "en-US": "Test key: any string with at least 8 characters, e.g. cfly-demo-2026",
+          "ja-JP": "テスト用キー：8 文字以上の任意の文字列（例: cfly-demo-2026）",
+          "es-ES": "Clave de prueba: cualquier cadena de al menos 8 caracteres, p. ej. cfly-demo-2026"
+        }
+      },
+      {
+        "key": "nickname",
+        "type": "string",
+        "label": {
+          "zh-CN": "昵称（可选）",
+          "en-US": "Nickname (optional)",
+          "ja-JP": "ニックネーム（任意）",
+          "es-ES": "Apodo (opcional)"
+        },
+        "default": "demo-user",
+        "placeholder": "demo-user"
+      },
+      {
+        "key": "verbosity",
+        "type": "select",
+        "label": {
+          "zh-CN": "输出详略",
+          "en-US": "Verbosity",
+          "ja-JP": "出力の詳細度",
+          "es-ES": "Nivel de detalle"
+        },
+        "default": "basic",
+        "options": [
+          {
+            "value": "basic",
+            "label": {
+              "zh-CN": "简洁",
+              "en-US": "Basic",
+              "ja-JP": "簡潔",
+              "es-ES": "Básico"
+            }
+          },
+          {
+            "value": "verbose",
+            "label": {
+              "zh-CN": "详细",
+              "en-US": "Verbose",
+              "ja-JP": "詳細",
+              "es-ES": "Detallado"
+            }
+          }
+        ]
+      }
+    ],
+    "bindings": {
+      "env": {
+        "CFLY_DEMO_API_KEY": "{{apiKey}}",
+        "CFLY_DEMO_NICKNAME": "{{nickname}}",
+        "CFLY_DEMO_VERBOSITY": "{{verbosity}}"
+      }
+    }
+  }
+}

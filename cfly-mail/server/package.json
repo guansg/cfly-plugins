@@ -1,0 +1,19 @@
+{
+  "name": "cfly-mail-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Official mail MCP server for CflyEdit Plugin Hub (stdio).",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test lib/limits.test.js lib/search-criteria.test.js lib/config.test.js lib/message-format.test.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.0",
+    "imapflow": "^1.0.164",
+    "mailparser": "^3.7.1",
+    "nodemailer": "^6.9.16",
+    "zod": "^3.25.76"
+  }
+}

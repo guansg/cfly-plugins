@@ -1,0 +1,280 @@
+{
+  "schemaVersion": 1,
+  "id": "cfly-mail",
+  "name": "Mail",
+  "displayName": {
+    "zh-CN": "邮件",
+    "en-US": "Mail",
+    "ja-JP": "メール",
+    "es-ES": "Correo"
+  },
+  "version": "1.0.2",
+  "description": {
+    "zh-CN": "通过 SMTP 发信、IMAP 收信；支持查未读、读正文、搜索与发送邮件。",
+    "en-US": "Send via SMTP and read via IMAP: list, search, fetch, and send mail.",
+    "ja-JP": "SMTP 送信・IMAP 受信；未読確認、本文取得、検索、送信に対応。",
+    "es-ES": "Envío SMTP e IMAP: listar, buscar, leer y enviar correo."
+  },
+  "icon": "assets/icon.svg",
+  "author": "CflyAI",
+  "category": "productivity",
+  "minClientVersion": "1.0.0",
+  "transport": "stdio",
+  "runtime": {
+    "entry": "server/index.js",
+    "args": [],
+    "requires": { "node": ">=22" },
+    "bundleDependencies": true
+  },
+  "mcp": {
+    "probeTool": "verify_mail",
+    "connectTimeoutMs": 60000,
+    "listToolsTimeoutMs": 30000,
+    "callToolIdleTimeoutMs": 120000,
+    "callToolMaxTotalTimeoutMs": 300000,
+    "toolTimeoutOverrides": {
+      "list_messages": { "maxTotalMs": 120000 },
+      "get_message": { "maxTotalMs": 180000 },
+      "search_messages": { "maxTotalMs": 180000 },
+      "send_email": { "maxTotalMs": 120000 },
+      "verify_mail": { "maxTotalMs": 60000 }
+    }
+  },
+  "permissions": ["localProcess", "network"],
+  "config": {
+    "required": ["email", "password"],
+    "presets": {
+      "providerPreset": {
+        "qq": {
+          "smtpHost": "smtp.qq.com",
+          "smtpPort": 465,
+          "smtpEncryption": "ssl",
+          "imapHost": "imap.qq.com",
+          "imapPort": 993,
+          "imapEncryption": "ssl"
+        },
+        "163": {
+          "smtpHost": "smtp.163.com",
+          "smtpPort": 465,
+          "smtpEncryption": "ssl",
+          "imapHost": "imap.163.com",
+          "imapPort": 993,
+          "imapEncryption": "ssl"
+        },
+        "gmail": {
+          "smtpHost": "smtp.gmail.com",
+          "smtpPort": 465,
+          "smtpEncryption": "ssl",
+          "imapHost": "imap.gmail.com",
+          "imapPort": 993,
+          "imapEncryption": "ssl"
+        },
+        "outlook": {
+          "smtpHost": "smtp.office365.com",
+          "smtpPort": 587,
+          "smtpEncryption": "starttls",
+          "imapHost": "outlook.office365.com",
+          "imapPort": 993,
+          "imapEncryption": "ssl"
+        },
+        "custom": {}
+      }
+    },
+    "fields": [
+      {
+        "key": "providerPreset",
+        "type": "select",
+        "label": {
+          "zh-CN": "邮箱服务商",
+          "en-US": "Provider preset",
+          "ja-JP": "メールプロバイダ",
+          "es-ES": "Proveedor de correo"
+        },
+        "default": "custom",
+        "options": [
+          { "value": "custom", "label": { "zh-CN": "自定义", "en-US": "Custom", "ja-JP": "カスタム", "es-ES": "Personalizado" } },
+          { "value": "qq", "label": { "zh-CN": "QQ 邮箱", "en-US": "QQ Mail", "ja-JP": "QQ メール", "es-ES": "QQ Mail" } },
+          { "value": "163", "label": { "zh-CN": "网易 163", "en-US": "NetEase 163", "ja-JP": "NetEase 163", "es-ES": "NetEase 163" } },
+          { "value": "gmail", "label": { "zh-CN": "Gmail", "en-US": "Gmail", "ja-JP": "Gmail", "es-ES": "Gmail" } },
+          { "value": "outlook", "label": { "zh-CN": "Outlook / Hotmail", "en-US": "Outlook", "ja-JP": "Outlook", "es-ES": "Outlook" } }
+        ],
+        "description": {
+          "zh-CN": "选预设可自动填充 SMTP/IMAP 主机与端口；仍须填写邮箱与授权码",
+          "en-US": "Preset fills SMTP/IMAP hosts; you still enter email and app password",
+          "ja-JP": "プリセットで SMTP/IMAP ホストを自動入力；メールと認証コードは必須",
+          "es-ES": "El preset rellena hosts SMTP/IMAP; aún debe ingresar correo y clave de aplicación"
+        }
+      },
+      {
+        "key": "email",
+        "type": "string",
+        "label": {
+          "zh-CN": "邮箱地址",
+          "en-US": "Email address",
+          "ja-JP": "メールアドレス",
+          "es-ES": "Dirección de correo"
+        },
+        "placeholder": "you@example.com"
+      },
+      {
+        "key": "password",
+        "type": "secret",
+        "label": {
+          "zh-CN": "密码 / 授权码",
+          "en-US": "Password / app password",
+          "ja-JP": "パスワード / 認証コード",
+          "es-ES": "Contraseña / clave de aplicación"
+        },
+        "description": {
+          "zh-CN": "QQ/163/Gmail 等请使用 SMTP/IMAP 授权码，非登录密码",
+          "en-US": "Use provider app password for SMTP/IMAP, not web login password",
+          "ja-JP": "SMTP/IMAP 用の認証コードを使用（Web ログインパスワード不可）",
+          "es-ES": "Use la clave de aplicación SMTP/IMAP, no la contraseña web"
+        }
+      },
+      {
+        "key": "smtpHost",
+        "type": "string",
+        "label": {
+          "zh-CN": "SMTP 服务器",
+          "en-US": "SMTP host",
+          "ja-JP": "SMTP サーバー",
+          "es-ES": "Servidor SMTP"
+        },
+        "placeholder": "smtp.example.com"
+      },
+      {
+        "key": "smtpPort",
+        "type": "number",
+        "label": {
+          "zh-CN": "SMTP 端口",
+          "en-US": "SMTP port",
+          "ja-JP": "SMTP ポート",
+          "es-ES": "Puerto SMTP"
+        },
+        "default": 465
+      },
+      {
+        "key": "smtpEncryption",
+        "type": "select",
+        "label": {
+          "zh-CN": "SMTP 加密",
+          "en-US": "SMTP encryption",
+          "ja-JP": "SMTP 暗号化",
+          "es-ES": "Cifrado SMTP"
+        },
+        "default": "ssl",
+        "options": [
+          { "value": "ssl", "label": { "zh-CN": "SSL (465)", "en-US": "SSL (465)", "ja-JP": "SSL (465)", "es-ES": "SSL (465)" } },
+          { "value": "starttls", "label": { "zh-CN": "STARTTLS (587)", "en-US": "STARTTLS (587)", "ja-JP": "STARTTLS (587)", "es-ES": "STARTTLS (587)" } },
+          { "value": "none", "label": { "zh-CN": "无（内网）", "en-US": "None (intranet)", "ja-JP": "なし（イントラネット）", "es-ES": "Ninguno (intranet)" } }
+        ]
+      },
+      {
+        "key": "imapHost",
+        "type": "string",
+        "label": {
+          "zh-CN": "IMAP 服务器",
+          "en-US": "IMAP host",
+          "ja-JP": "IMAP サーバー",
+          "es-ES": "Servidor IMAP"
+        },
+        "placeholder": "imap.example.com"
+      },
+      {
+        "key": "imapPort",
+        "type": "number",
+        "label": {
+          "zh-CN": "IMAP 端口",
+          "en-US": "IMAP port",
+          "ja-JP": "IMAP ポート",
+          "es-ES": "Puerto IMAP"
+        },
+        "default": 993
+      },
+      {
+        "key": "imapEncryption",
+        "type": "select",
+        "label": {
+          "zh-CN": "IMAP 加密",
+          "en-US": "IMAP encryption",
+          "ja-JP": "IMAP 暗号化",
+          "es-ES": "Cifrado IMAP"
+        },
+        "default": "ssl",
+        "options": [
+          { "value": "ssl", "label": { "zh-CN": "SSL (993)", "en-US": "SSL (993)", "ja-JP": "SSL (993)", "es-ES": "SSL (993)" } },
+          { "value": "starttls", "label": { "zh-CN": "STARTTLS (143)", "en-US": "STARTTLS (143)", "ja-JP": "STARTTLS (143)", "es-ES": "STARTTLS (143)" } },
+          { "value": "none", "label": { "zh-CN": "无（内网）", "en-US": "None (intranet)", "ja-JP": "なし（イントラネット）", "es-ES": "Ninguno (intranet)" } }
+        ]
+      },
+      {
+        "key": "fromName",
+        "type": "string",
+        "label": {
+          "zh-CN": "发件人名称（可选）",
+          "en-US": "From display name (optional)",
+          "ja-JP": "送信者名（任意）",
+          "es-ES": "Nombre del remitente (opcional)"
+        }
+      },
+      {
+        "key": "defaultMailbox",
+        "type": "string",
+        "label": {
+          "zh-CN": "默认邮箱文件夹",
+          "en-US": "Default mailbox",
+          "ja-JP": "デフォルトメールボックス",
+          "es-ES": "Buzón predeterminado"
+        },
+        "default": "INBOX",
+        "placeholder": "INBOX"
+      },
+      {
+        "key": "maxListMessages",
+        "type": "number",
+        "label": {
+          "zh-CN": "列表单次最多封数",
+          "en-US": "Max messages per list",
+          "ja-JP": "一覧の最大件数",
+          "es-ES": "Máx. mensajes por lista"
+        },
+        "default": 30,
+        "description": {
+          "zh-CN": "list_messages / search_messages 上限；结果仍受客户端约 12k 字符截断",
+          "en-US": "Cap for list/search; client may still truncate ~12k chars",
+          "ja-JP": "一覧/検索の上限；クライアントは約 12k 文字で切り詰め",
+          "es-ES": "Límite de lista/búsqueda; el cliente puede truncar ~12k caracteres"
+        }
+      },
+      {
+        "key": "maxBodyChars",
+        "type": "number",
+        "label": {
+          "zh-CN": "单封正文最大字符",
+          "en-US": "Max body chars per message",
+          "ja-JP": "本文の最大文字数",
+          "es-ES": "Máx. caracteres del cuerpo"
+        },
+        "default": 12000
+      }
+    ],
+    "bindings": {
+      "env": {
+        "CFLY_MAIL_EMAIL": "{{email}}",
+        "CFLY_MAIL_PASSWORD": "{{password}}",
+        "CFLY_MAIL_SMTP_HOST": "{{smtpHost}}",
+        "CFLY_MAIL_SMTP_PORT": "{{smtpPort}}",
+        "CFLY_MAIL_SMTP_ENCRYPTION": "{{smtpEncryption}}",
+        "CFLY_MAIL_IMAP_HOST": "{{imapHost}}",
+        "CFLY_MAIL_IMAP_PORT": "{{imapPort}}",
+        "CFLY_MAIL_IMAP_ENCRYPTION": "{{imapEncryption}}",
+        "CFLY_MAIL_FROM_NAME": "{{fromName}}",
+        "CFLY_MAIL_DEFAULT_MAILBOX": "{{defaultMailbox}}",
+        "CFLY_MAIL_MAX_LIST": "{{maxListMessages}}",
+        "CFLY_MAIL_MAX_BODY_CHARS": "{{maxBodyChars}}",
+        "CFLY_MAIL_PROVIDER": "{{providerPreset}}"
+      }
+    }
+  }
+}

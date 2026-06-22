@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="MySQL">
+  <defs>
+    <linearGradient id="mysql-g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#00758f"/>
+      <stop offset="1" stop-color="#f29111"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="8" width="112" height="112" rx="26" fill="url(#mysql-g)"/>
+  <ellipse cx="64" cy="44" rx="32" ry="12" fill="#fff" opacity="0.95"/>
+  <path d="M32 44v40c0 8 14 14 32 14s32-6 32-14V44" fill="none" stroke="#fff" stroke-width="6"/>
+  <ellipse cx="64" cy="84" rx="32" ry="12" fill="none" stroke="#fff" stroke-width="6"/>
+  <path d="M32 58c0 8 14 14 32 14s32-6 32-14" fill="none" stroke="#fff" stroke-width="4" opacity="0.7"/>
+</svg>

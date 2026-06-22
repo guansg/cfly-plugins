@@ -1,0 +1,174 @@
+{
+  "schemaVersion": 1,
+  "id": "cfly-mysql",
+  "name": "MySQL Query",
+  "displayName": {
+    "zh-CN": "MySQL 查询",
+    "en-US": "MySQL Query",
+    "ja-JP": "MySQL クエリ",
+    "es-ES": "Consulta MySQL"
+  },
+  "version": "1.0.0",
+  "description": {
+    "zh-CN": "连接 MySQL/MariaDB，浏览库表结构并执行受控 SQL 查询。默认只读，适合开发库与只读从库。",
+    "en-US": "Connect to MySQL/MariaDB, browse schema and run guarded SQL. Read-only by default.",
+    "ja-JP": "MySQL/MariaDB に接続し、スキーマ参照と制御付き SQL 実行。デフォルトは読み取り専用。",
+    "es-ES": "Conecta a MySQL/MariaDB, explora esquemas y ejecuta SQL controlado. Solo lectura por defecto."
+  },
+  "icon": "assets/icon.svg",
+  "author": "CflyAI",
+  "category": "database",
+  "minClientVersion": "1.0.0",
+  "transport": "stdio",
+  "runtime": {
+    "entry": "server/index.js",
+    "args": [],
+    "requires": { "node": ">=22" },
+    "bundleDependencies": true
+  },
+  "mcp": {
+    "probeTool": "test_connection",
+    "connectTimeoutMs": 30000,
+    "listToolsTimeoutMs": 15000,
+    "callToolIdleTimeoutMs": 120000,
+    "callToolMaxTotalTimeoutMs": 600000,
+    "toolTimeoutOverrides": {
+      "run_query": { "maxTotalMs": 600000 },
+      "test_connection": { "maxTotalMs": 30000 }
+    }
+  },
+  "permissions": ["localProcess", "network"],
+  "config": {
+    "required": ["host", "username"],
+    "fields": [
+      {
+        "key": "host",
+        "type": "string",
+        "label": {
+          "zh-CN": "主机",
+          "en-US": "Host",
+          "ja-JP": "ホスト",
+          "es-ES": "Host"
+        },
+        "placeholder": "127.0.0.1",
+        "default": "127.0.0.1"
+      },
+      {
+        "key": "port",
+        "type": "number",
+        "label": {
+          "zh-CN": "端口",
+          "en-US": "Port",
+          "ja-JP": "ポート",
+          "es-ES": "Puerto"
+        },
+        "default": 3306
+      },
+      {
+        "key": "database",
+        "type": "string",
+        "label": {
+          "zh-CN": "默认数据库（可选）",
+          "en-US": "Default database (optional)",
+          "ja-JP": "デフォルト DB（任意）",
+          "es-ES": "Base de datos predeterminada (opcional)"
+        },
+        "description": {
+          "zh-CN": "留空时在工具参数中指定库名",
+          "en-US": "Leave empty to pass database per tool call",
+          "ja-JP": "空の場合はツール呼び出しで DB を指定",
+          "es-ES": "Dejar vacío y pasar la BD en cada herramienta"
+        }
+      },
+      {
+        "key": "username",
+        "type": "string",
+        "label": {
+          "zh-CN": "用户名",
+          "en-US": "Username",
+          "ja-JP": "ユーザー名",
+          "es-ES": "Usuario"
+        }
+      },
+      {
+        "key": "password",
+        "type": "secret",
+        "label": {
+          "zh-CN": "密码",
+          "en-US": "Password",
+          "ja-JP": "パスワード",
+          "es-ES": "Contraseña"
+        },
+        "description": {
+          "zh-CN": "本地无密码库可留空；生产环境请使用强密码",
+          "en-US": "Leave empty for local no-password DB; use a strong password in production",
+          "ja-JP": "ローカルでパスワードなしの場合は空のまま",
+          "es-ES": "Dejar vacío si la BD local no tiene contraseña"
+        }
+      },
+      {
+        "key": "readonly",
+        "type": "boolean",
+        "label": {
+          "zh-CN": "只读模式",
+          "en-US": "Read-only mode",
+          "ja-JP": "読み取り専用",
+          "es-ES": "Solo lectura"
+        },
+        "description": {
+          "zh-CN": "开启后仅允许读操作；关闭后助手可能执行写操作，请使用权限受限账号",
+          "en-US": "When enabled, only read-only SQL is allowed",
+          "ja-JP": "有効時は読み取り専用 SQL のみ",
+          "es-ES": "Si está activo, solo SQL de lectura"
+        },
+        "default": true
+      },
+      {
+        "key": "maxRows",
+        "type": "number",
+        "label": {
+          "zh-CN": "单次最大返回行数",
+          "en-US": "Max rows per query",
+          "ja-JP": "1回の最大行数",
+          "es-ES": "Filas máximas por consulta"
+        },
+        "default": 200,
+        "description": {
+          "zh-CN": "Server 自动追加 LIMIT；结果仍受客户端约 12k 字符截断",
+          "en-US": "Server enforces LIMIT; client may still truncate ~12k chars",
+          "ja-JP": "Server が LIMIT を付与；クライアントは約 12k 文字で切り詰め",
+          "es-ES": "El servidor aplica LIMIT; el cliente puede truncar ~12k caracteres"
+        }
+      },
+      {
+        "key": "ssl",
+        "type": "boolean",
+        "label": {
+          "zh-CN": "启用 SSL",
+          "en-US": "Enable SSL",
+          "ja-JP": "SSL を有効化",
+          "es-ES": "Habilitar SSL"
+        },
+        "description": {
+          "zh-CN": "v1 使用系统受信 CA，不支持自签证书路径",
+          "en-US": "v1 uses system CAs; custom CA paths not supported",
+          "ja-JP": "v1 はシステム CA のみ（独自 CA パス非対応）",
+          "es-ES": "v1 usa CA del sistema; sin rutas CA personalizadas"
+        },
+        "default": false
+      }
+    ],
+    "bindings": {
+      "env": {
+        "CFLY_MYSQL_HOST": "{{host}}",
+        "CFLY_MYSQL_PORT": "{{port}}",
+        "CFLY_MYSQL_DATABASE": "{{database}}",
+        "CFLY_MYSQL_USER": "{{username}}",
+        "CFLY_MYSQL_PASSWORD": "{{password}}",
+        "CFLY_MYSQL_READONLY": "{{readonly}}",
+        "CFLY_MYSQL_MAX_ROWS": "{{maxRows}}",
+        "CFLY_MYSQL_SSL": "{{ssl}}"
+      }
+    }
+  }
+}
