@@ -1,16 +1,27 @@
 ---
 name: cflyedit-plugin
 description: >-
-  Guide Cursor when developing CflyEdit MCP plugins on the author's machine
-  (cfly-plugin.json, stdio server, probe tools, pack to .cfly-plugin.zip).
-  Use when creating cfly-mysql or other plugins, editing manifest,
-  implementing mcp.probeTool, or packaging release zips.
+  Guide AI agents (Cursor, Claude Code, Codex) when developing CflyEdit MCP
+  plugins (cfly-plugin.json, stdio server, probe tools, pack to .cfly-plugin.zip).
+  Plugins run in CflyEdit (cflyedit.com). Use when creating cfly-mysql or other
+  plugins, editing manifest, implementing mcp.probeTool, or packaging release zips.
 ---
 
-# CflyEdit 插件开发（Cursor Skill）
+# CflyEdit 插件开发（AI Agent Skill）
 
-本 skill 供**插件作者**安装到本机 Cursor，在本仓库内开发插件时使用。  
+本 skill 供**插件作者**在 **Cursor**、**Claude Code** 或 **Codex** 中开发本仓库插件时使用。  
+此处开发的插件最终在 **[CflyEdit](https://cflyedit.com)** 中安装运行 —— 宿主应用，在助手对话中加载 MCP 插件。
+
 完整契约以 [PLUGIN-AUTHOR-GUIDE.zh-CN.md](../PLUGIN-AUTHOR-GUIDE.zh-CN.md) 为准，本文件仅约束 Agent 行为要点。
+
+## 工具语境
+
+| 工具 | 你当前可能在用 | CflyEdit 的角色 |
+|------|---------------|----------------|
+| **Cursor** | IDE + Agent + skills | 成品插件的运行宿主 |
+| **Claude Code** | CLI / 项目 Agent | 成品插件的运行宿主 |
+| **Codex** | 编程 Agent（AGENTS.md） | 成品插件的运行宿主 |
+| **CflyEdit** | 此处不涉及 —— 终端用户应用 | 安装 `.cfly-plugin.zip`、注入配置、调用 MCP 工具 |
 
 ## 必读（按顺序）
 
@@ -18,7 +29,7 @@ description: >-
 2. `cfly-mcp-demo/` — 参考实现（manifest + Server + 探针）
 3. 业务插件（若适用）：`<pluginId>/README.md`（如 `cfly-mysql/README.md`）
 
-**工作范围**：仅在本仓库的插件目录内修改；业务逻辑写在插件 MCP Server，不假设客户端会对特定 `pluginId` 做定制。
+**工作范围**：仅在本仓库的插件目录内修改；业务逻辑写在插件 MCP Server，不假设 CflyEdit 客户端会对特定 `pluginId` 做定制。
 
 ## 新插件工作流
 
@@ -27,6 +38,7 @@ description: >-
 3. 实现 `server/index.js`（及 `server/lib/*` 若业务复杂）
 4. `cd <pluginId>/server && npm ci --omit=dev`
 5. 在仓库根目录：`zip -r <pluginId>-<version>.cfly-plugin.zip <pluginId>/`
+6. 用户在 **CflyEdit** 插件广场安装 zip（不是在 Cursor / Claude Code / Codex 里安装）
 
 ## 硬规则（违反会导致验收失败）
 
@@ -35,11 +47,11 @@ description: >-
 | zip 含 `node_modules` | stdio 插件 Release **必须**；CflyEdit 客户端不帮用户跑 npm |
 | 单层根目录 | zip 内根文件夹名 = `manifest.id` |
 | 缺配置不 exit | 保证 `listTools` / 卡片「测试连接」可成功 |
-| 无 `.env` | 配置仅来自 `bindings` 注入的 env |
+| 无 `.env` | 配置仅来自 CflyEdit `bindings` 注入的 env |
 | secret 字段 | `type: "secret"`；Server 从 env 读，日志不写明文 |
 | 双层测试 | 卡片测试 = MCP 管线；`mcp.probeTool` = 外部服务；**勿**在 listTools 连外部服务 |
 | 探针 JSON | `{ ok, summary?, latencyMs? }` 或 `{ ok:false, message? }` 裸 JSON text |
-| 12k 截断 | 助手侧单次 callTool 结果约 12000 字符；Server 控行数/摘要 |
+| 12k 截断 | CflyEdit 助手侧单次 callTool 结果约 12000 字符；Server 控行数/摘要 |
 | `toolTimeoutOverrides` | 仅 `idleMs` / `maxTotalMs` 键名 |
 
 ## 启动策略模板
@@ -81,5 +93,6 @@ zip -r <pluginId>-<version>.cfly-plugin.zip <pluginId>/
 - [ ] 有外部依赖时已实现 `mcp.probeTool` 同名 tool
 - [ ] 插件 README 含连接示例与安全说明
 - [ ] Release zip 含 `server/node_modules`
+- [ ] README 说明插件在 [CflyEdit](https://cflyedit.com) 中运行
 
 详细说明见 `PLUGIN-AUTHOR-GUIDE.zh-CN.md`。

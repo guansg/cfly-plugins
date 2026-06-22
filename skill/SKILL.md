@@ -1,16 +1,27 @@
 ---
 name: cflyedit-plugin
 description: >-
-  Guide Cursor when developing CflyEdit MCP plugins on the author's machine
-  (cfly-plugin.json, stdio server, probe tools, pack to .cfly-plugin.zip).
-  Use when creating cfly-mysql or other plugins, editing manifest,
-  implementing mcp.probeTool, or packaging release zips.
+  Guide AI agents (Cursor, Claude Code, Codex) when developing CflyEdit MCP
+  plugins (cfly-plugin.json, stdio server, probe tools, pack to .cfly-plugin.zip).
+  Plugins run in CflyEdit (cflyedit.com). Use when creating cfly-mysql or other
+  plugins, editing manifest, implementing mcp.probeTool, or packaging release zips.
 ---
 
-# CflyEdit Plugin Development (Cursor Skill)
+# CflyEdit Plugin Development (AI Agent Skill)
 
-This skill is for **plugin authors** to install on their local Cursor instance while working in this repository.  
+This skill is for **plugin authors** using **Cursor**, **Claude Code**, or **Codex** while working in this repository.  
+Plugins you build here run in **[CflyEdit](https://cflyedit.com)** — the host app that installs MCP plugins for assistant chat.
+
 The full platform contract lives in [PLUGIN-AUTHOR-GUIDE.md](../PLUGIN-AUTHOR-GUIDE.md); this file only constrains Agent behavior.
+
+## Tool context
+
+| Tool | You are likely running in | CflyEdit role |
+|------|---------------------------|---------------|
+| **Cursor** | IDE with Agent + skills | Target runtime for finished plugins |
+| **Claude Code** | CLI / project agent | Target runtime for finished plugins |
+| **Codex** | Coding agent (AGENTS.md) | Target runtime for finished plugins |
+| **CflyEdit** | N/A here — end-user app | Installs `.cfly-plugin.zip`, injects config, calls MCP tools |
 
 ## Read first (in order)
 
@@ -27,6 +38,7 @@ The full platform contract lives in [PLUGIN-AUTHOR-GUIDE.md](../PLUGIN-AUTHOR-GU
 3. Implement `server/index.js` (and `server/lib/*` if needed)
 4. `cd <pluginId>/server && npm ci --omit=dev`
 5. From repo root: `zip -r <pluginId>-<version>.cfly-plugin.zip <pluginId>/`
+6. User installs zip in **CflyEdit** plugin hub (not in Cursor / Claude Code / Codex)
 
 ## Hard rules (acceptance fails if violated)
 
@@ -35,11 +47,11 @@ The full platform contract lives in [PLUGIN-AUTHOR-GUIDE.md](../PLUGIN-AUTHOR-GU
 | zip includes `node_modules` | **Required** for stdio Release; CflyEdit client does not run npm for users |
 | Single root folder | Zip root folder name = `manifest.id` |
 | Missing config → no exit | Process must stay up so **Test connection** (`listTools`) can succeed |
-| No `.env` | Config only via `bindings` → env injection |
+| No `.env` | Config only via CflyEdit `bindings` → env injection |
 | `secret` fields | `type: "secret"`; Server reads env; never log plaintext |
 | Two-layer testing | Card test = MCP pipeline; `mcp.probeTool` = external service; **do not** hit external services in `listTools` |
 | Probe JSON | `{ ok, summary?, latencyMs? }` or `{ ok:false, message? }` as raw JSON text |
-| 12k truncation | Assistant truncates callTool text at ~12,000 chars; Server should limit rows/summary |
+| 12k truncation | CflyEdit assistant truncates callTool text at ~12,000 chars; Server should limit rows/summary |
 | `toolTimeoutOverrides` | Keys must be `idleMs` / `maxTotalMs` only |
 
 ## Startup strategy template
@@ -81,5 +93,6 @@ zip -r <pluginId>-<version>.cfly-plugin.zip <pluginId>/
 - [ ] If external deps exist, `mcp.probeTool` tool is implemented with the same name
 - [ ] Plugin README has connection examples and security notes
 - [ ] Release zip contains `server/node_modules`
+- [ ] README mentions plugin runs in [CflyEdit](https://cflyedit.com)
 
 See `PLUGIN-AUTHOR-GUIDE.md` for full details.

@@ -13,7 +13,7 @@ This repository contains **CflyEdit MCP plugin** source code. Develop and packag
 1. Read the **[Plugin Author Guide](./PLUGIN-AUTHOR-GUIDE.md)** (platform contract — single source of truth)
 2. Study the reference implementation **[cfly-mcp-demo](./cfly-mcp-demo/)** (manifest + stdio Server + probe tool)
 3. For business plugins, read each plugin's **README** (e.g. [cfly-mysql/README.md](./cfly-mysql/README.md))
-4. (Optional) Install the **[Cursor Skill](./skill/)** on your machine — see [skill/README.md](./skill/README.md)
+4. (Optional) Install the **[AI Agent Skill](./skill/)** (Cursor / Claude Code / Codex) — see [skill/README.md](./skill/README.md)
 
 ## Directory
 
@@ -23,7 +23,7 @@ This repository contains **CflyEdit MCP plugin** source code. Develop and packag
 | [cfly-mcp-demo/](./cfly-mcp-demo/) | Official reference plugin |
 | [cfly-mail/](./cfly-mail/) | Official mail plugin (SMTP/IMAP) |
 | [cfly-mysql/](./cfly-mysql/) | Official MySQL query plugin |
-| [skill/](./skill/) | Cursor Skill for plugin development |
+| [skill/](./skill/) | AI Agent Skill for plugin development (Cursor / Claude Code / Codex) |
 
 ## Packaging a Release Zip
 
@@ -55,7 +55,7 @@ Output: `<pluginId>-<version>.cfly-plugin.zip` with a single root folder matchin
 1. 阅读 **[插件开发指南](./PLUGIN-AUTHOR-GUIDE.zh-CN.md)**（平台契约，单一真相；[English](./PLUGIN-AUTHOR-GUIDE.md)）
 2. 对照参考实现 **[cfly-mcp-demo](./cfly-mcp-demo/)**（manifest + stdio Server + 探针 tool）
 3. 业务插件阅读对应目录下的 **README**（如 [cfly-mysql/README.md](./cfly-mysql/README.md)）
-4. （可选）安装 **[Cursor Skill](./skill/)** 到本机，见 [skill/README.zh-CN.md](./skill/README.zh-CN.md)
+4. （可选）安装 **[ Skill](./skill/)** 到本机，见 [skill/README.zh-CN.md](./skill/README.zh-CN.md)
 
 ## 目录
 
@@ -65,7 +65,7 @@ Output: `<pluginId>-<version>.cfly-plugin.zip` with a single root folder matchin
 | [cfly-mcp-demo/](./cfly-mcp-demo/) | 官方参考插件 |
 | [cfly-mail/](./cfly-mail/) | 官方邮件插件（SMTP/IMAP） |
 | [cfly-mysql/](./cfly-mysql/) | 官方 MySQL 查询插件 |
-| [skill/](./skill/) | Cursor Skill（插件开发辅助） |
+| [skill/](./skill/) | Skill（插件开发辅助） |
 
 ## 打包 Release zip
 
