@@ -9,7 +9,7 @@ When developing, use **this guide + the [cfly-mcp-demo](./cfly-mcp-demo/) refere
 
 ## 1. What Is a Plugin
 
-A CflyEdit plugin = **a `cfly-plugin.json` manifest** + **an MCP Server** (typically a local stdio subprocess), installed, configured, and started/stopped by the client, exposing capabilities via MCP tools in **assistant chat**.
+**[CflyEdit](https://cflyedit.com)** is the host application. A CflyEdit plugin = **a `cfly-plugin.json` manifest** + **an MCP Server** (typically a local stdio subprocess), installed, configured, and started/stopped by the client, exposing capabilities via MCP tools in **assistant chat**.
 
 ```
 User installs zip

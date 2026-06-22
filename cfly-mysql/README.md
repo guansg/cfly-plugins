@@ -1,5 +1,7 @@
 # cfly-mysql
 
+> Requires **[CflyEdit](https://cflyedit.com)** — install the plugin from the in-app plugin hub.
+
 Official **MySQL query plugin** for CflyEdit (stdio / bundled Node). Connects to user-configured MySQL/MariaDB, browses schema, and runs guarded SQL. **Read-only by default**.
 
 Platform contract: **[Plugin Author Guide](../PLUGIN-AUTHOR-GUIDE.md)** ([中文](../PLUGIN-AUTHOR-GUIDE.zh-CN.md)).
@@ -69,6 +71,8 @@ zip -r cfly-mysql-1.0.0.cfly-plugin.zip cfly-mysql/
 ---
 
 # cfly-mysql
+
+> 需配合 **[CflyEdit](https://cflyedit.com)** 使用 —— 在客户端插件广场安装本插件。
 
 CflyEdit **官方 MySQL 查询插件**（stdio / 内置 Node）。连接用户配置的 MySQL/MariaDB，浏览库表并执行受控 SQL。**默认只读**。
 

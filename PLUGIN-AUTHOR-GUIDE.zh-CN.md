@@ -9,7 +9,7 @@
 
 ## 1. 插件是什么
 
-CflyEdit 插件 = **一份 `cfly-plugin.json` 清单** + **一个 MCP Server**（通常为本地 stdio 子进程），由客户端安装、配置、启停，并在 **助手对话** 中通过 MCP 工具暴露能力。
+**[CflyEdit](https://cflyedit.com)** 是插件的运行宿主。CflyEdit 插件 = **一份 `cfly-plugin.json` 清单** + **一个 MCP Server**（通常为本地 stdio 子进程），由客户端安装、配置、启停，并在 **助手对话** 中通过 MCP 工具暴露能力。
 
 ```
 用户安装 zip

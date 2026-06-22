@@ -1,5 +1,7 @@
 # cfly-mcp-demo
 
+> Requires **[CflyEdit](https://cflyedit.com)** — install the plugin from the in-app plugin hub.
+
 Official **reference plugin** for the CflyEdit plugin hub (stdio / bundled Node). Validates the full flow: install → configure → [optional] probe → MCP test → assistant call. No external network required.
 
 Platform contract: **[Plugin Author Guide](../PLUGIN-AUTHOR-GUIDE.md)** ([中文](../PLUGIN-AUTHOR-GUIDE.zh-CN.md)).
@@ -57,6 +59,8 @@ zip -r cfly-mcp-demo-1.1.0.cfly-plugin.zip cfly-mcp-demo/
 ---
 
 # cfly-mcp-demo
+
+> 需配合 **[CflyEdit](https://cflyedit.com)** 使用 —— 在客户端插件广场安装本插件。
 
 CflyEdit 插件广场的**官方参考插件**（stdio / 内置 Node 运行）。用于验证「安装 → 配置 → [可选] 探针 → MCP 测试 → 助手调用」全链路，无需外网。
 

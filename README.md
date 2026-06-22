@@ -1,7 +1,13 @@
 # CflyEdit Official Plugin Source
 
-This repository contains **CflyEdit MCP plugin** source code. Develop and package plugins from this directory.
+## About CflyEdit
 
+**[CflyEdit](https://cflyedit.com)** is the host application for these plugins — an AI-powered editor that lets you install, configure, and use MCP plugins directly in assistant chat.
+
+- **Website**: https://cflyedit.com
+- **This repo**: Official plugin source for the CflyEdit plugin hub
+
+This repository contains **CflyEdit MCP plugin** source code. Develop and package plugins from this directory.
 ## Getting Started
 
 1. Read the **[Plugin Author Guide](./PLUGIN-AUTHOR-GUIDE.md)** (platform contract — single source of truth)
@@ -36,8 +42,14 @@ Output: `<pluginId>-<version>.cfly-plugin.zip` with a single root folder matchin
 
 # CflyEdit 官方插件源码
 
-本目录存放 **CflyEdit MCP 插件** 的源码与 Release 打包入口。在本目录即可完成开发与打包。
+## 关于 CflyEdit
 
+**[CflyEdit](https://cflyedit.com)** 是这些插件的运行宿主 —— 一款 AI 编辑器，支持在助手对话中安装、配置并使用 MCP 插件。
+
+- **官网**：https://cflyedit.com
+- **本仓库**：CflyEdit 插件广场官方插件源码
+
+本目录存放 **CflyEdit MCP 插件** 的源码与 Release 打包入口。在本目录即可完成开发与打包。
 ## 开始之前
 
 1. 阅读 **[插件开发指南](./PLUGIN-AUTHOR-GUIDE.zh-CN.md)**（平台契约，单一真相；[English](./PLUGIN-AUTHOR-GUIDE.md)）

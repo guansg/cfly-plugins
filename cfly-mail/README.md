@@ -1,5 +1,7 @@
 # cfly-mail
 
+> Requires **[CflyEdit](https://cflyedit.com)** — install the plugin from the in-app plugin hub.
+
 Official **mail plugin** for CflyEdit (stdio / bundled Node). Send via SMTP, receive via IMAP — list unread, read body, search, and send mail.
 
 Platform contract: **[Plugin Author Guide](../PLUGIN-AUTHOR-GUIDE.md)** ([中文](../PLUGIN-AUTHOR-GUIDE.zh-CN.md)).
@@ -64,6 +66,8 @@ zip -r cfly-mail-1.0.2.cfly-plugin.zip cfly-mail/
 ---
 
 # cfly-mail
+
+> 需配合 **[CflyEdit](https://cflyedit.com)** 使用 —— 在客户端插件广场安装本插件。
 
 CflyEdit **官方邮件插件**（stdio / 内置 Node）。通过 SMTP 发信、IMAP 收信，支持查未读、读正文、搜索与发送。
 
