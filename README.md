@@ -2,7 +2,13 @@
 
 ## About CflyEdit
 
-**[CflyEdit](https://cflyedit.com)** is the host application for these plugins — an AI-powered editor that lets you install, configure, and use MCP plugins directly in assistant chat.
+**[CflyEdit](https://cflyedit.com)** is an AI editor and MCP plugin host:
+
+- **Develop** — open this repo in CflyEdit, Cursor, Claude Code, or Codex; optional [AI Agent Skill](./skill/)
+- **Install plugins** — plugin hub or import `.cfly-plugin.zip` (supports `minClientVersion` check)
+- **Run MCP tools** — in assistant chat with configure → probe → test → enable flow
+- **Rich tool output** — text/JSON, image/audio/video preview, file capture to workspace `cfly-captures/`
+- **Safe stdio runtime** — isolated env whitelist, per-plugin output dir `plugin-mcp-output/<pluginId>`
 
 - **Website**: https://cflyedit.com
 - **This repo**: Official plugin source for the CflyEdit plugin hub
@@ -13,7 +19,7 @@ This repository contains **CflyEdit MCP plugin** source code. Develop and packag
 1. Read the **[Plugin Author Guide](./PLUGIN-AUTHOR-GUIDE.md)** (platform contract — single source of truth)
 2. Study the reference implementation **[cfly-mcp-demo](./cfly-mcp-demo/)** (manifest + stdio Server + probe tool)
 3. For business plugins, read each plugin's **README** (e.g. [cfly-mysql/README.md](./cfly-mysql/README.md))
-4. (Optional) Install the **[AI Agent Skill](./skill/)** (Cursor / Claude Code / Codex) — see [skill/README.md](./skill/README.md)
+4. (Optional) Install the **[AI Agent Skill](./skill/)** (CflyEdit / Cursor / Claude Code / Codex) — see [skill/README.md](./skill/README.md)
 
 ## Directory
 
@@ -23,7 +29,7 @@ This repository contains **CflyEdit MCP plugin** source code. Develop and packag
 | [cfly-mcp-demo/](./cfly-mcp-demo/) | Official reference plugin |
 | [cfly-mail/](./cfly-mail/) | Official mail plugin (SMTP/IMAP) |
 | [cfly-mysql/](./cfly-mysql/) | Official MySQL query plugin |
-| [skill/](./skill/) | AI Agent Skill for plugin development (Cursor / Claude Code / Codex) |
+| [skill/](./skill/) | AI Agent Skill for plugin development (CflyEdit / Cursor / Claude Code / Codex) |
 
 ## Packaging a Release Zip
 
@@ -44,7 +50,13 @@ Output: `<pluginId>-<version>.cfly-plugin.zip` with a single root folder matchin
 
 ## 关于 CflyEdit
 
-**[CflyEdit](https://cflyedit.com)** 是这些插件的运行宿主 —— 一款 AI 编辑器，支持在助手对话中安装、配置并使用 MCP 插件。
+**[CflyEdit](https://cflyedit.com)** 是 AI 编辑器与 MCP 插件宿主：
+
+- **开发** — 在 CflyEdit、Cursor、Claude Code 或 Codex 中打开本仓库；可选 [AI Agent Skill](./skill/)
+- **安装插件** — 插件广场或导入 `.cfly-plugin.zip`（支持 `minClientVersion` 校验）
+- **运行 MCP 工具** — 助手对话中完成配置 → 探针 → 测试 → 启用
+- **丰富工具出参** — 文本/JSON、图音视频预览、媒体复制到工作区 `cfly-captures/`
+- **安全 stdio 运行时** — 环境变量白名单、每插件独立落盘目录 `plugin-mcp-output/<pluginId>`
 
 - **官网**：https://cflyedit.com
 - **本仓库**：CflyEdit 插件广场官方插件源码
@@ -55,7 +67,7 @@ Output: `<pluginId>-<version>.cfly-plugin.zip` with a single root folder matchin
 1. 阅读 **[插件开发指南](./PLUGIN-AUTHOR-GUIDE.zh-CN.md)**（平台契约，单一真相；[English](./PLUGIN-AUTHOR-GUIDE.md)）
 2. 对照参考实现 **[cfly-mcp-demo](./cfly-mcp-demo/)**（manifest + stdio Server + 探针 tool）
 3. 业务插件阅读对应目录下的 **README**（如 [cfly-mysql/README.md](./cfly-mysql/README.md)）
-4. （可选）安装 **[ Skill](./skill/)** 到本机，见 [skill/README.zh-CN.md](./skill/README.zh-CN.md)
+4. （可选）安装 **[AI Agent Skill](./skill/)**（CflyEdit / Cursor / Claude Code / Codex）到本机，见 [skill/README.zh-CN.md](./skill/README.zh-CN.md)
 
 ## 目录
 
@@ -65,7 +77,7 @@ Output: `<pluginId>-<version>.cfly-plugin.zip` with a single root folder matchin
 | [cfly-mcp-demo/](./cfly-mcp-demo/) | 官方参考插件 |
 | [cfly-mail/](./cfly-mail/) | 官方邮件插件（SMTP/IMAP） |
 | [cfly-mysql/](./cfly-mysql/) | 官方 MySQL 查询插件 |
-| [skill/](./skill/) | Skill（插件开发辅助） |
+| [skill/](./skill/) | AI Agent Skill（CflyEdit / Cursor / Claude Code / Codex 插件开发辅助） |
 
 ## 打包 Release zip
 

@@ -28,7 +28,8 @@ description: >-
 
 1. `PLUGIN-AUTHOR-GUIDE.zh-CN.md` — 平台契约（**单一真相**）
 2. `cfly-mcp-demo/` — 参考实现（manifest + Server + 探针）
-3. 业务插件（若适用）：`<pluginId>/README.md`（如 `cfly-mysql/README.md`）
+3. 落盘与媒体预览：见指南 §3.4.1 / §4.4.2；示例插件为 CflyEdit 插件广场 `cfly-playwright`
+4. 业务插件（若适用）：`<pluginId>/README.md`（如 `cfly-mysql/README.md`）
 
 **工作范围**：仅在本仓库的插件目录内修改；业务逻辑写在插件 MCP Server，不假设 CflyEdit 客户端会对特定 `pluginId` 做定制。
 
@@ -39,7 +40,7 @@ description: >-
 3. 实现 `server/index.js`（及 `server/lib/*` 若业务复杂）
 4. `cd <pluginId>/server && npm ci --omit=dev`
 5. 在仓库根目录：`zip -r <pluginId>-<version>.cfly-plugin.zip <pluginId>/`
-6. 用户在 **CflyEdit** 插件广场安装 zip（不是在 Cursor / Claude Code / Codex 里安装）
+6. 在 **CflyEdit** 插件广场安装并测试 zip（若用 CflyEdit 开发，可在同一应用内完成）
 
 ## 硬规则（违反会导致验收失败）
 
@@ -54,6 +55,10 @@ description: >-
 | 探针 JSON | `{ ok, summary?, latencyMs? }` 或 `{ ok:false, message? }` 裸 JSON text |
 | 12k 截断 | CflyEdit 助手侧单次 callTool 结果约 12000 字符；Server 控行数/摘要 |
 | `toolTimeoutOverrides` | 仅 `idleMs` / `maxTotalMs` 键名 |
+| 落盘目录 | 运行时文件写入 `CFLY_PLUGIN_MCP_OUTPUT_DIR` / 相对 `cwd`；**禁止**写安装目录（§3.4.1） |
+| 媒体出参 | 截图优先 `type: image` + base64；或 text 内 Markdown 相对路径（§4.4.2） |
+| 禁止自造 marker | **勿**在 text 中插入 `[[CFLY_MCP_IMAGE]]` 等，由客户端生成 |
+| 本地调试 env | 子进程不继承全量 env；本地调试须模拟 §3.4.2 白名单 |
 
 ## 启动策略模板
 

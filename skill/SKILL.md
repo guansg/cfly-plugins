@@ -28,7 +28,8 @@ The full platform contract lives in [PLUGIN-AUTHOR-GUIDE.md](../PLUGIN-AUTHOR-GU
 
 1. `PLUGIN-AUTHOR-GUIDE.md` — platform contract (**single source of truth**)
 2. `cfly-mcp-demo/` — reference implementation (manifest + Server + probe)
-3. Business plugins (if any): `<pluginId>/README.md` (e.g. `cfly-mysql/README.md`)
+3. For output dir + media preview: see guide §3.4.1 / §4.4.2; example plugin `cfly-playwright` on CflyEdit hub
+4. Business plugins (if any): `<pluginId>/README.md` (e.g. `cfly-mysql/README.md`)
 
 **Scope**: change only plugin directories in this repo. Put business logic in the plugin MCP Server; do not assume the CflyEdit client will special-case your `pluginId`.
 
@@ -54,6 +55,10 @@ The full platform contract lives in [PLUGIN-AUTHOR-GUIDE.md](../PLUGIN-AUTHOR-GU
 | Probe JSON | `{ ok, summary?, latencyMs? }` or `{ ok:false, message? }` as raw JSON text |
 | 12k truncation | CflyEdit assistant truncates callTool text at ~12,000 chars; Server should limit rows/summary |
 | `toolTimeoutOverrides` | Keys must be `idleMs` / `maxTotalMs` only |
+| Output directory | Runtime files → `CFLY_PLUGIN_MCP_OUTPUT_DIR` / relative `cwd`; **never** write to install dir (§3.4.1) |
+| Media output | Screenshots: prefer `type: image` + base64; or Markdown link to relative path in text (§4.4.2) |
+| No custom markers | **Do not** insert `[[CFLY_MCP_IMAGE]]` etc. in text — client generates them |
+| Local debug env | Subprocess does not inherit full env; simulate §3.4.2 allowlist when debugging locally |
 
 ## Startup strategy template
 

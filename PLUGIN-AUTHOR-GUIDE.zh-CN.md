@@ -9,7 +9,7 @@
 
 ## 1. 插件是什么
 
-**[CflyEdit](https://cflyedit.com)** 是插件的运行宿主。CflyEdit 插件 = **一份 `cfly-plugin.json` 清单** + **一个 MCP Server**（通常为本地 stdio 子进程），由客户端安装、配置、启停，并在 **助手对话** 中通过 MCP 工具暴露能力。
+**[CflyEdit](https://cflyedit.com)** 是插件的运行宿主（AI 编辑器 + MCP 插件宿主）。CflyEdit 插件 = **一份 `cfly-plugin.json` 清单** + **一个 MCP Server**（通常为本地 stdio 子进程），由客户端安装、配置、启停，并在 **助手对话** 中通过 MCP 工具暴露能力。
 
 ```
 用户安装 zip
@@ -70,6 +70,7 @@ zip -r <pluginId>-<version>.cfly-plugin.zip <pluginId>/
 | `id` | 是 | 稳定插件 ID（slug），与 zip 根目录名、Hub catalog `slug` 一致 |
 | `name` | 是 | 展示名称 |
 | `version` | 是 | semver |
+| `minClientVersion` | 否 | 最低客户端版本；Hub 与 **zip 导入**均会校验 |
 | `description` | 建议 | i18n：`{ "zh-CN": "...", "en-US": "..." }` |
 | `icon` | 否 | 相对路径，如 `assets/icon.svg` |
 | `transport` | 是 | `stdio` 或 `streamableHttp` |
@@ -102,7 +103,7 @@ zip -r <pluginId>-<version>.cfly-plugin.zip <pluginId>/
 **官方约定**：
 
 1. 有几个输入就在 `fields` 里声明几个。
-2. `bindings` 中每个 `{{key}}` 必须在 `fields` 中存在。
+2. `bindings` 中每个 `{{key}}` 须在 `fields` 中存在，**或**为平台占位符 `{{pluginMcpOutputDir}}`（§3.4.1）。
 3. 密码、API Key 等用 `type: "secret"`；客户端加密存储，**不回显明文**。
 4. `fields[].default` 仅作表单默认值；**不算**「用户已填写」。
 
@@ -147,6 +148,44 @@ Server 侧须自行解析：`"true"` / `"false"` → boolean，`"3306"` → numb
 
 **禁止**在插件包内使用 `.env` 文件；配置 **仅**来自客户端注入。
 
+### 3.4.1 平台 env 与工作目录（客户端自动注入）
+
+客户端拉起 **stdio 插件**时，除 `bindings` 解析结果外，还会**自动**配置：
+
+| 项 | 值 | 说明 |
+|----|-----|------|
+| `CFLY_PLUGIN_MCP_OUTPUT_DIR` | `<userData>/plugin-mcp-output/<pluginId>` | 可写落盘目录 env；**无需**在 manifest 声明 |
+| **stdio `cwd`** | 与上表目录相同 | 子进程相对路径（如 `./shot.png`）默认落在此目录 |
+| **`args[0]`** | `<installPath>/<runtime.entry>` 绝对路径 | 入口脚本；**不要**依赖 `cwd` 定位 `server/index.js` |
+
+Server 侧读取示例：
+
+```js
+const outputDir = process.env.CFLY_PLUGIN_MCP_OUTPUT_DIR;
+// process.cwd() 与 outputDir 一致（stdio 插件）
+```
+
+**不要**让用户在配置表单里填写该路径；客户端在 resolve / install 时注入，且 **bindings 不可覆盖** `CFLY_PLUGIN_MCP_OUTPUT_DIR`。
+
+客户端会在 resolve / install 时 **`mkdir` 落盘目录**（`recursive: true`）；Server 首次写文件前仍可自行确保目录存在。
+
+**禁止**向插件安装目录（`pluginInstallPath`）写入运行时文件；安装包目录只读放代码与 `node_modules`。
+
+可选高级用法：若需映射到自有 env 名，可在 `bindings` 使用平台占位符 `{{pluginMcpOutputDir}}`（**不是** `fields` 的 key）。常规写文件请直接读 `CFLY_PLUGIN_MCP_OUTPUT_DIR` 或使用相对 `cwd` 路径。
+
+> **仅 stdio 插件**：`streamableHttp` 无本地子进程 env，不注入此变量；远端 MCP 自行管理落盘。
+
+### 3.4.2 stdio 环境白名单
+
+插件子进程 **不继承**全量 `process.env`。除 `bindings` 与上表平台 env 外，客户端仅透传 OS 白名单（供 Playwright 等解析浏览器路径）：
+
+- **Windows**：`SystemRoot`、`TEMP`、`TMP`、`USERPROFILE`、`COMSPEC`、`ProgramFiles`、`ProgramFiles(x86)`、`ProgramW6432`、`LOCALAPPDATA`、`APPDATA`、`PROGRAMDATA`、`SystemDrive`
+- **Unix**：`HOME`、`TMPDIR`、`LANG`
+
+另将内置 Node 目录 **前置**到 `PATH`。
+
+本地调试（§10）须自行 `export` / `set` 模拟上述变量。
+
 ---
 
 ## 4. MCP Server 开发约定
@@ -174,11 +213,37 @@ cfly_mcp_<serverId>__<toolName>
 `serverId` 由 `manifest.id` 规范化得到（非法字符变 `_`，最长约 40 字符，**连字符保留**）。  
 例：`pluginId` `cfly-mcp-demo` → `cfly_mcp_cfly-mcp-demo__ping`。
 
-### 4.4 工具返回格式
+### 4.4 工具返回格式（`callTool` 出参）
+
+#### 4.4.1 文本与 JSON
 
 - 推荐：`content: [{ type: "text", text: "<JSON 字符串>" }]`
 - 业务失败：JSON 内 `{ "ok": false, "message": "..." }`，必要时 `isError: true`
 - **单次结果**在客户端约 **12,000 字符**处截断（所有 MCP 插件共用）。大结果集请在 Server 内 `LIMIT`、分页或摘要，并标注 `truncated: true`。
+
+#### 4.4.2 媒体预览（图 / 音 / 视）
+
+客户端统一处理 MCP 标准 `content` 类型：
+
+| `type` | 插件返回 | 客户端行为 |
+|--------|----------|------------|
+| `text` | `{ type: "text", text: "..." }` | 给模型原文；扫描文内 `](path)` 媒体路径 → 复制到工作区 `cfly-captures` 预览 |
+| `image` / `audio` / `video` | `{ type, mimeType, data: "<base64>" }` | 解码落盘 `cfly-captures` 后在对话区预览 |
+| `resource` | `{ type: "resource", resource: { mimeType, blob } }` | 按 mime 分流 |
+
+**不要**在 text 中自行插入 `[[CFLY_MCP_IMAGE]]` 等 marker（由客户端生成）。
+
+文内路径解析顺序：`stdio.cwd`（= `plugin-mcp-output/<pluginId>`）→ `CFLY_PLUGIN_MCP_OUTPUT_DIR`（通常与 cwd 相同）→ 当前工作区根。支持扩展名：`.png` `.jpg` `.jpeg` `.gif` `.webp` `.svg`、常见音频（`.mp3` `.wav` …）、视频（`.mp4` `.webm` …）。
+
+解析成功且文件在允许范围内时，客户端会**复制**到当前工作区的 `cfly-captures/`（未打开工作区则为 `userData/cfly-captures/`），并**保留源文件名**（重名时自动 `-2`、`-3` …）；随后在工具结果文末追加 `[MCP image]`（或 audio/video）及 `[[CFLY_MCP_*]]` marker，供对话区预览与后续工具引用。插件只需在 `plugin-mcp-output` 写文件并在 text 里用 Markdown 链接引用；请使用有意义、不易冲突的文件名。
+
+截图等场景优先返回 `type: "image"` + base64；若已写盘，可在 text 中用 Markdown 链接指向相对 `cwd` 的路径（如 `./shot.png`）。
+
+#### 4.4.3 `listTools` 入参 schema
+
+- 根类型建议为 `object` + `properties`
+- 勿依赖 `$schema` / `$id`（客户端会剥离）
+- 可空字段用 `anyOf` + `null` 或 `type: ["string","null"]` 等常见写法
 
 ### 4.5 依赖选型
 
@@ -319,7 +384,7 @@ node index.js
 
 1. Release zip **已含** `server/node_modules`（`npm ci --omit=dev` 后再 pack）。
 2. `config.fields` 只含连接参数与安全开关；业务交互走 MCP 工具。
-3. `bindings` 占位符与 `fields` 一致；敏感项 `type: secret`。
+3. `bindings` 占位符与 `fields` 一致（或 `{{pluginMcpOutputDir}}`）；敏感项 `type: secret`。
 4. 缺 env 时进程仍可 `listTools`（§4.2）。
 5. 大结果分页/摘要；知晓 §4.4 的 12k 字符截断。
 6. 长任务在 manifest 声明合适超时。
@@ -327,6 +392,9 @@ node index.js
 8. 有外部依赖时声明 `mcp.probeTool` 并实现探针 tool（§5）。
 9. zip 根目录名 = `manifest.id`；版本与 catalog 一致。
 10. 错误信息 **不含** 密码、完整连接串；日志不写 secret。
+11. 运行时文件写入 `CFLY_PLUGIN_MCP_OUTPUT_DIR`（§3.4.1），**禁止**写安装目录。
+12. 截图/媒体：优先 `type: image` + base64，或 text 内 Markdown 相对 `cwd`；**勿**自造 `[[CFLY_MCP_*]]` marker（§4.4.2）。
+13. 本地调试时模拟 §3.4.2 白名单 env。
 
 ---
 
@@ -335,6 +403,7 @@ node index.js
 | 资源 | 路径 |
 |------|------|
 | **官方参考插件** | [cfly-mcp-demo/](./cfly-mcp-demo/)（manifest + 探针 `verify_api_key`） |
+| **浏览器自动化** | CflyEdit 插件广场 `cfly-playwright`（`CFLY_PLUGIN_MCP_OUTPUT_DIR` + 截图预览；本仓库未含源码） |
 | **业务插件** | 各插件目录下的 `README.md`（如 [cfly-mysql/README.md](./cfly-mysql/README.md)） |
 | **探针约定** | 见本文 §5（无需另读其他文档） |
 
@@ -359,3 +428,5 @@ node index.js
 |------|------|
 | 2026-06-22 | 初版：平台契约自给自足，供插件作者使用 |
 | 2026-06-22 | 移除对 monorepo 内部文档的引用，业务规格改指各插件 README |
+| 2026-06-25 | stdio `cwd` = `plugin-mcp-output`、绝对 entry；§3.4.1 平台 env/cwd；§4.4 媒体出参 |
+| 2026-06-25 | §4.4.2 补充：text 媒体路径复制到工作区 `cfly-captures` 并保留源 basename |
